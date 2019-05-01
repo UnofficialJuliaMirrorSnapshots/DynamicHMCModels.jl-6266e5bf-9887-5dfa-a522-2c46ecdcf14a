@@ -1,6 +1,7 @@
 # Load Julia packages (libraries) needed  for the snippets in chapter 0
 
-using DynamicHMCModels
+using DynamicHMCModels, Random
+Random.seed!(12345)
 
 # CmdStan uses a tmp directory to store the output of cmdstan
 
