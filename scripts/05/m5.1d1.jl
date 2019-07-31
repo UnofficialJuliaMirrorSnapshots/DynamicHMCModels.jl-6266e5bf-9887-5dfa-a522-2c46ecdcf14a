@@ -11,9 +11,9 @@ cd(ProjDir)
 
 wd = CSV.read(rel_path("..", "data", "WaffleDivorce.csv"), delim=';')
 df = convert(DataFrame, wd);
-mean_ma = mean(df[:MedianAgeMarriage])
-df[:MedianAgeMarriage_s] = convert(Vector{Float64},
-  (df[:MedianAgeMarriage]) .- mean_ma)/std(df[:MedianAgeMarriage]);
+mean_ma = mean(df[!, :MedianAgeMarriage])
+df[!, :MedianAgeMarriage_s] = convert(Vector{Float64},
+  (df[!, :MedianAgeMarriage]) .- mean_ma)/std(df[!, :MedianAgeMarriage]);
 
 # Show the first six rows of the dataset.
 
@@ -44,8 +44,8 @@ end
 # Instantiate the model with data and inits.
 
 N = size(df, 1)
-X = hcat(ones(N), df[:MedianAgeMarriage_s]);
-y = convert(Vector{Float64}, df[:Divorce])
+X = hcat(ones(N), df[!, :MedianAgeMarriage_s]);
+y = convert(Vector{Float64}, df[!, :Divorce])
 p = WaffleDivorceProblem(y, X);
 p((β = [1.0, 2.0], σ = 1.0))
 
@@ -57,7 +57,7 @@ problem_transformation(p::WaffleDivorceProblem) =
 # Wrap the problem with a transformation, then use Flux for the gradient.
 
 P = TransformedLogDensity(problem_transformation(p), p)
-∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
+∇P = ADgradient(:ForwardDiff, P);
 
 # Create an array to hold 1000 samples of 3 parameters in 4 chains
 
