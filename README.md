@@ -11,11 +11,13 @@ This package contains Julia versions of the mcmc models contained in the R packa
 
 This package implements the models using [DynamicHMC](https://github.com/tpapp/DynamicHMC.jl).
 
+## Note
+
+Master is being converted to future DynamicHMC. WIP!!
+
 ## Acknowledgements
 
 Tamas Papp has been very helpful during the development og the DynamicHMC versions of the models.
-
-The  documentation has been generated using Literate.jl and Documenter.jl based on several ideas demonstrated by Tamas Papp in above mentioned  [DynamicHMCExamples.jl](https://tpapp.github.io/DynamicHMCExamples.jl).
 
 ## Questions and issues
 
