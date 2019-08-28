@@ -1,12 +1,8 @@
 using DynamicHMCModels
-using Flux
 
 ProjDir = @__DIR__
-cd(ProjDir)
 
-# ### snippet 10.4
-
-data = DataFrame(CSV.read(joinpath(ProjDir, "..", "..", "data", "chimpanzees.csv"), delim=';'))
+df = DataFrame(CSV.read(joinpath(ProjDir, "..", "..", "data", "chimpanzees.csv"), delim=';'))
 
 Base.@kwdef struct Chimpanzees
     "Number of actors"
@@ -21,13 +17,13 @@ function make_transformation(model::Chimpanzees)
     as((a = as(Vector, model.N_actors), bp = asℝ, bpC = asℝ))
 end
 
-model = Chimpanzees(; N_actors = maximum(data.actor), pulled_left = data.pulled_left,
-                    prosoc_left = data.prosoc_left, condition = data.condition,
-                    actor = data.actor)
+model = Chimpanzees(; N_actors = maximum(df.actor), pulled_left = df.pulled_left,
+                    prosoc_left = df.prosoc_left, condition = df.condition,
+                    actor = df.actor)
 
 function (model::Chimpanzees)(θ)
-    @unpack a, bp, bpC = θ
     @unpack pulled_left, prosoc_left, condition, actor = model
+    @unpack a, bp, bpC = θ
     ℓ_likelihood = mapreduce(+, actor, condition, prosoc_left,
        pulled_left) do actor, condition, prosoc_left, pulled_left
            p = logistic(a[actor] + (bp + bpC * condition) * prosoc_left)
